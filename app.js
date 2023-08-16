@@ -15,11 +15,28 @@ function onSubmit(e){
         alert('Please enter fields !');
      }
      else{
-        localStorage.setItem('FirstName', firstName.value);
-        localStorage.setItem('LastName', lastName.value);
-        localStorage.setItem('Gender', genderInput.value);
-        localStorage.setItem('Date', dateInput.value);
-        localStorage.setItem('Contact', contactInput.value);
+        // localStorage.setItem('FirstName', firstName.value);
+        // localStorage.setItem('LastName', lastName.value);
+        // localStorage.setItem('Gender', genderInput.value);
+        // localStorage.setItem('Date', dateInput.value);
+        // localStorage.setItem('Contact', contactInput.value);
+        const userDetails = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            gender: genderInput.value,
+            date: dateInput.value,
+            contact: contactInput.value
+        };
+
+        let userDetails_serialized = JSON.stringify(userDetails);
+
+        localStorage.setItem('userDetails', userDetails_serialized);
+
+        let userDetails_deserialized = JSON.parse(localStorage.getItem('userDetails'));
+        
+        console.log(userDetails_deserialized);
+
+
 
      }
 }
