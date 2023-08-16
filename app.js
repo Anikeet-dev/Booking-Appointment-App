@@ -4,6 +4,8 @@ const lastName = document.querySelector('#lname');
 const genderInput = document.querySelector('#gender');
 const dateInput = document.querySelector('#date');
 const contactInput = document.querySelector('#phNumber');
+const userBox = document.getElementById('user-box');
+
 
 
 myForm.addEventListener('submit', onSubmit);
@@ -32,9 +34,13 @@ function onSubmit(e){
 
         localStorage.setItem('userDetails', userDetails_serialized);
 
-        let userDetails_deserialized = JSON.parse(localStorage.getItem('userDetails'));
+        // let userDetails_deserialized = JSON.parse(localStorage.getItem('userDetails'));
         
-        console.log(userDetails_deserialized);
+        
+        const user = document.createElement('p');
+
+        user.textContent = userDetails_serialized;
+        userBox.appendChild(user);
 
 
 
