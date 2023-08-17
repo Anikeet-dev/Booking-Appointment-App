@@ -33,7 +33,7 @@
             /* position: relative;
             width: 40%; */
             width: 40%;
-            margin: 0 auto; 
+            margin: 0 auto;
             background-color: rgba(256, 256, 256, 90%);
             padding: 30px;
             border-radius: 8px;
@@ -45,7 +45,9 @@
             font-weight: 500;
             margin: 1rem;
         }
-        .new-container{
+
+        .new-container {
+            position: relative;
             width: 40%;
             margin: 10px auto;
             padding: 20px;
@@ -53,16 +55,19 @@
             background-color: rgba(256, 256, 256, 90%);
             border-radius: 8px;
         }
-        .input-box{
+
+        .input-box {
             width: 100%;
-            margin-top: 20px ;
+            margin-top: 20px;
         }
-        .input-box .name-box{
+
+        .input-box .name-box {
             position: relative;
             height: 22px;
             width: 50%;
         }
-       button{
+
+        button {
             margin-top: 1.5rem;
             height: 35px;
             width: 100%;
@@ -74,10 +79,11 @@
             background-color: rgb(130, 106, 251);
 
         }
-        button:hover{
+
+        button:hover {
             background-color: rgb(88, 56, 250);
         }
-      
+
         @media screen and (max-width: 768px) {
             .container {
                 width: 80%;
@@ -91,7 +97,7 @@
 
     <section class="container">
         <form id="my-form" action="#" method="get">
-            
+
             <header>New Registration</header>
 
             <div class="input-box">
@@ -120,16 +126,20 @@
                 <input type="tel" id="phNumber" placeholder="+91" maxlength="13"><br>
             </div>
 
-          <button type="submit" >Submit</button>
+            <button type="submit">Submit</button>
 
         </form>
     </section>
     <div class="container-sm new-container" id="user-box">
+        <ul class="user-list-group" id="users">
+            <label for=""><Strong>Registered User's:</Strong></label>
 
+        </ul>
     </div>
 
 
     <script src="app.js"></script>
+    
 </body>
 
 </html>
