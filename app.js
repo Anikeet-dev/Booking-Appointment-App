@@ -38,35 +38,71 @@ function onSubmit(e) {
         const user = document.createElement('li');
 
         user.innerHTML =
-            userDetails.firstName + ' ' +
-            userDetails.lastName + ' ' +
-            userDetails.gender + ' ' +
-            userDetails.date + ' ' +
-            userDetails.contact;
+            userDetails.firstName + ', ' +
+            userDetails.lastName + ', ' +
+            userDetails.gender + ', ' +
+            userDetails.date + ', ' + 
+            '+91 ' + userDetails.contact;
+
+        const userKey = firstName.value;
 
         //Delet Button
-        const userKey = firstName.value;       
         const deleteBtn = document.createElement('input');
         deleteBtn.type = 'button';
         deleteBtn.value = 'Delete';
 
         //styling Delete Button
-        deleteBtn.style.backgroundColor = 'red';
-        deleteBtn.style.color = 'white';
-        deleteBtn.style.border = 'none';
+        deleteBtn.style.backgroundColor = 'light-grey';
+        deleteBtn.style.borderColor = 'grey';
         deleteBtn.style.borderRadius = '3px';
+        deleteBtn.style.cursor = 'pointer';
         deleteBtn.style.position = 'absolute';
-        deleteBtn.style.right = '0';
+        deleteBtn.style.right = '65px';
         deleteBtn.style.padding = '5px';
-        deleteBtn.style.marginRight = '5px';
 
+        //Deleting user from local storage and user list.
         deleteBtn.onclick = function () {
             user.remove();
             localStorage.removeItem(userKey);
         };
 
         user.appendChild(deleteBtn);
+        
+
+        //Edit Button
+        const editBtn = document.createElement('input');
+        editBtn.type = 'button';
+        editBtn.value = 'edit';
+
+        //styling edit Button
+        editBtn.style.backgroundColor = 'light-grey';
+        editBtn.style.borderColor = 'grey';
+        editBtn.style.borderRadius = '3px';
+        editBtn.style.cursor = 'pointer';
+        editBtn.style.position = 'absolute';
+        editBtn.style.right = '10px';
+        editBtn.style.padding = '5px 12px';
+        
+        
+
+        editBtn.onclick = function () {
+            const storedUserDetails = JSON.parse(localStorage.getItem(userKey));
+
+            firstName.value = storedUserDetails.firstName;
+            lastName.value = storedUserDetails.lastName;
+            genderInput.checked = storedUserDetails.gender === 'Male';
+            dateInput.value = storedUserDetails.date;
+            contactInput.value = storedUserDetails.contact;
+
+            user.remove();
+            localStorage.removeItem(userKey);
+        };
+
+        user.appendChild(editBtn);
+
+        //Appends new registered user on user list.
         userList.appendChild(user);
+        
 
         //clearing the inputs 
         firstName.value = '';
