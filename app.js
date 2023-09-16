@@ -21,6 +21,7 @@ function onSubmit(e) {
         // localStorage.setItem('Gender', genderInput.value);
         // localStorage.setItem('Date', dateInput.value);
         // localStorage.setItem('Contact', contactInput.value);
+        
         const userDetails = {
             firstName: firstName.value,
             lastName: lastName.value,
@@ -29,20 +30,37 @@ function onSubmit(e) {
             contact: contactInput.value
         };
 
+        axios.post("https://crudcrud.com/api/70401f2c069d4c018570089fd2cffdf2/appointmentData", userDetails)
+            .then((response) => {
+                const responseData = response.data;
+                const user = document.createElement('li');
+
+                user.innerHTML =
+                    responseData.firstName + ', ' +
+                    responseData.lastName + ', ' +
+                    responseData.gender + ', ' +
+                    responseData.date + ', ' +
+                    '+91 ' + responseData.contact;
+
+                //Appends new registered user on user list.
+                userList.appendChild(user);
+
+
+                console.log(response)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
         let userDetails_serialized = JSON.stringify(userDetails);
 
-        localStorage.setItem(firstName.value, userDetails_serialized);
+        // localStorage.setItem(firstName.value, userDetails_serialized);
 
         // let userDetails_deserialized = JSON.parse(localStorage.getItem('userDetails'));
 
-        const user = document.createElement('li');
 
-        user.innerHTML =
-            userDetails.firstName + ', ' +
-            userDetails.lastName + ', ' +
-            userDetails.gender + ', ' +
-            userDetails.date + ', ' + 
-            '+91 ' + userDetails.contact;
+
+
 
         const userKey = firstName.value;
 
@@ -67,7 +85,7 @@ function onSubmit(e) {
         };
 
         user.appendChild(deleteBtn);
-        
+
 
         //Edit Button
         const editBtn = document.createElement('input');
@@ -82,8 +100,8 @@ function onSubmit(e) {
         editBtn.style.position = 'absolute';
         editBtn.style.right = '10px';
         editBtn.style.padding = '5px 12px';
-        
-        
+
+
 
         editBtn.onclick = function () {
             const storedUserDetails = JSON.parse(localStorage.getItem(userKey));
@@ -100,9 +118,7 @@ function onSubmit(e) {
 
         user.appendChild(editBtn);
 
-        //Appends new registered user on user list.
-        userList.appendChild(user);
-        
+
 
         //clearing the inputs 
         firstName.value = '';
