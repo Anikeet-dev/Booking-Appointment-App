@@ -37,7 +37,7 @@ function onSubmit(e) {
 
                 const userKey = firstName.value;
 
-                deleteButtton(user, userKey);
+                deleteButtton(user, responseData._id);
                 editButton(user, userKey);
 
                 //Appends new registered user on user list.
@@ -78,13 +78,13 @@ function showUsersOnScreen(userItem) {
     listItem.appendChild(userElement);
     userList.appendChild(listItem);
 
-    deleteButtton(listItem, userItem.firstName);
+    deleteButtton(listItem, userItem);
     editButton(listItem, userItem.firstName);
 }
 
 
 //Deleting user from user list.
-function deleteButtton(user, userKey) {
+function deleteButtton(user, userItem) {
 
     const deleteBtn = document.createElement('input');
     deleteBtn.type = 'button';
@@ -92,7 +92,10 @@ function deleteButtton(user, userKey) {
 
     deleteBtn.onclick = function () {
         user.remove();
-        localStorage.removeItem(userKey);
+
+        const apiUrl = `https://crudcrud.com/api/6f3b328c8ed94aee820289f5c6260497/appointmentData/${userItem._id}`;
+        axios.delete(apiUrl);
+
     };
     //styling Delete Button
     deleteBtn.style.backgroundColor = 'light-grey';
