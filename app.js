@@ -24,7 +24,7 @@ function onSubmit(e) {
             contact: contactInput.value
         };
 
-        axios.post("https://crudcrud.com/api/6f3b328c8ed94aee820289f5c6260497/appointmentData", userDetails)
+        axios.post("https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData", userDetails)
             .then((response) => {
                 const responseData = response.data;
                 const user = document.createElement('li');
@@ -35,7 +35,7 @@ function onSubmit(e) {
                     responseData.date + ', ' +
                     '+91 ' + responseData.contact;
 
-                const userKey = firstName.value;
+                const userKey = responseData;
 
                 deleteButtton(user, responseData._id);
                 editButton(user, userKey);
@@ -53,7 +53,7 @@ function onSubmit(e) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/6f3b328c8ed94aee820289f5c6260497/appointmentData")
+    axios.get("https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData")
         .then((response) => {
             console.log(response)
 
@@ -79,7 +79,7 @@ function showUsersOnScreen(userItem) {
     userList.appendChild(listItem);
 
     deleteButtton(listItem, userItem);
-    editButton(listItem, userItem.firstName);
+    editButton(listItem, userItem);
 }
 
 
@@ -93,7 +93,7 @@ function deleteButtton(user, userItem) {
     deleteBtn.onclick = function () {
         user.remove();
 
-        const apiUrl = `https://crudcrud.com/api/6f3b328c8ed94aee820289f5c6260497/appointmentData/${userItem._id}`;
+        const apiUrl = `https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData/${userItem._id}`;
         axios.delete(apiUrl);
 
     };
@@ -110,23 +110,31 @@ function deleteButtton(user, userItem) {
 };
 
 //Edit Button 
-function editButton(user, userKey) {
+function editButton(user, userItem) {
     const editBtn = document.createElement('input');
     editBtn.type = 'button';
-    editBtn.value = 'edit';
+    editBtn.value = 'Edit';
 
     editBtn.onclick = function () {
-        const storedUserDetails = JSON.parse(localStorage.getItem(userKey));
 
-        firstName.value = storedUserDetails.firstName;
-        lastName.value = storedUserDetails.lastName;
-        dateInput.value = storedUserDetails.date;
-        contactInput.value = storedUserDetails.contact;
+        const apiUrl = `https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData/${userItem._id}`;
+        axios.get(apiUrl)
+            .then((response) => {
+                const userItem = response.data;
 
-        user.remove();
-        localStorage.removeItem(userKey);
+                firstName.value = userItem.firstName;
+                lastName.value = userItem.lastName;
+                dateInput.value = userItem.date;
+                contactInput.value = userItem.contact;
+
+                myForm.removeEventListener('submit', onSubmit);
+                myForm.addEventListener('submit', onUpdate);
+
+                user.remove();
+            })
+            
     };
-    //styling edit Button
+
     editBtn.style.backgroundColor = 'light-grey';
     editBtn.style.borderColor = 'grey';
     editBtn.style.borderRadius = '3px';
@@ -135,9 +143,35 @@ function editButton(user, userKey) {
     editBtn.style.right = '10px';
     editBtn.style.padding = '5px 12px';
 
-
     user.appendChild(editBtn);
-};
+}
+
+function onUpdate(e) {
+    e.preventDefault();
+
+    const updatedDetails = {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        date: dateInput.value,
+        contact: contactInput.value,
+    };
+
+    const apiUrl = `https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData/${userItem._id}`;
+    axios.put(apiUrl, updatedDetails)
+        .then((response) => {
+  
+            console.log('Appointment updated:', response.data);
+        })
+        .catch((err) => {
+            console.error('Error updating appointment:', err);
+        });
+
+    myForm.removeEventListener('submit', onUpdate);
+    myForm.addEventListener('submit', onSubmit);
+
+    clearInputs();
+}
+
 
 
 //clearing inputs
