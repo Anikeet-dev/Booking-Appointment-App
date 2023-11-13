@@ -21,7 +21,7 @@
         body {
             background-image: url('Nexus+Gray.png');
             background-size: cover;
-          
+
         }
 
         .container {
@@ -48,6 +48,16 @@
             background-color: rgba(256, 256, 256, 90%);
             border-radius: 8px;
         }
+        h4{
+            margin-bottom: .5rem;
+            
+        }
+
+        li {
+            margin-bottom: 0.9rem;
+        }
+
+
 
         .input-box {
             width: 100%;
@@ -94,23 +104,18 @@
             <header>Booking Appointment</header>
 
             <div class="input-box">
-                <label for="fname">First Name</label><br>
-                <input type="text" name="fname" id="fname" class="name-box"><br>
+                <label for="username">Username</label><br>
+                <input type="text" name="username" id="username" class="username-box"><br>
             </div>
 
             <div class="input-box">
-                <label for="lname">Last Name</label><br>
-                <input type="text" name="lname" id="lname" class="name-box"><br>
-            </div>
-
-            <div class="input-box">
-                <label for="date">DOB:</label>
-                <input type="date" name="dob" id="date"><br>
-            </div>
-
-            <div class="input-box">
-                <label for="contact">Phone Number:</label>
+                <label for="phNumber">Phone Number:</label><br>
                 <input type="tel" id="phNumber" placeholder="+91" maxlength="13"><br>
+            </div>
+
+            <div class="input-box">
+                <label for="email">Email</label><br>
+                <input type="email" name="email" id="email">
             </div>
 
             <button type="submit">Submit</button>
@@ -118,8 +123,9 @@
         </form>
     </section>
     <div class="container-sm new-container" id="user-box">
+        <h4><u>Registered User's:</u></h4>
         <ul class="user-list-group" id="users">
-            <label for=""><Strong>Registered User's:</Strong></label>
+
 
         </ul>
     </div>

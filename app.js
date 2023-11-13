@@ -1,91 +1,98 @@
 const myForm = document.querySelector('#my-form');
-const firstName = document.querySelector('#fname');
-const lastName = document.querySelector('#lname');
-const dateInput = document.querySelector('#date');
+const userName = document.querySelector('#username');
 const contactInput = document.querySelector('#phNumber');
+const emailId = document.querySelector('#email');
 const userList = document.getElementById('users');
-
-
 
 myForm.addEventListener('submit', onSubmit);
 
 function onSubmit(e) {
     e.preventDefault();
 
-    if (firstName.value === '' || lastName.value === '') {
-        alert('Please enter fields !');
-    }
-    else {
-
+    if (userName.value === '' || contactInput.value === '') {
+        alert('Please enter fields!');
+    } else {
         const userDetails = {
-            firstName: firstName.value,
-            lastName: lastName.value,
-            date: dateInput.value,
-            contact: contactInput.value
+            userName: userName.value,
+            contact: contactInput.value,
+            emailId: emailId.value,
         };
 
-        axios.post("https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData", userDetails)
+        axios.post("http://localhost:3000/user/add-user", userDetails)
             .then((response) => {
                 const responseData = response.data;
-                const user = document.createElement('li');
-
-                user.innerHTML =
-                    responseData.firstName + ', ' +
-                    responseData.lastName + ', ' +
-                    responseData.date + ', ' +
-                    '+91 ' + responseData.contact;
-
-                const userKey = responseData;
-
-                deleteButtton(user, responseData._id);
-                editButton(user, userKey);
-
-                //Appends new registered user on user list.
-                userList.appendChild(user);
+                setTimeout(() => {
+                    axios.get("http://localhost:3000/user/get-users")
+                        .then((response) => {
+                            console.log('Received Users:', response);
+                            showUsersOnScreen(response.data);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                }, 0);
 
                 clearInputs();
-                console.log(response)
+                console.log(response);
             })
             .catch((err) => {
-                console.log(err)
-            })
+                console.log(err);
+            });
     }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    axios.get("https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData")
+    axios.get("http://localhost:3000/user/get-users")
         .then((response) => {
-            console.log(response)
-
-            for (var i = 0; i < response.data.length; i++) {
-                showUsersOnScreen(response.data[i]);
-            }
+            console.log('Received Users:', response);
+            showUsersOnScreen(response.data);
         })
         .catch((err) => {
             console.log(err);
-        })
-})
+        });
+});
 
-function showUsersOnScreen(userItem) {
-    const listItem = document.createElement('li');
-    const userElement = document.createElement('span');
-    userElement.textContent =
-        userItem.firstName + ', ' +
-        userItem.lastName + ', ' +
-        userItem.date + ', ' +
-        '+91 ' + userItem.contact;
+function showUsersOnScreen(users) {
+    userList.innerHTML = '';
 
-    listItem.appendChild(userElement);
-    userList.appendChild(listItem);
+    if (Array.isArray(users)) {
 
-    deleteButtton(listItem, userItem);
-    editButton(listItem, userItem);
+        users.forEach((userItem) => {
+            const listItem = document.createElement('li');
+            const userElement = document.createElement('span');
+            userElement.textContent =
+                userItem.username + ', ' +
+                userItem.contact + ',' +
+                userItem.email;
+
+            listItem.appendChild(userElement);
+            userList.appendChild(listItem);
+
+            deleteButton(listItem, userItem);
+            editButton(listItem, userItem);
+        });
+    } else if (users && typeof users === 'object') {
+        const userArray = users.allUsers || [];
+        userArray.forEach((userItem) => {
+            const listItem = document.createElement('li');
+            const userElement = document.createElement('span');
+            userElement.textContent =
+                userItem.username + ', ' +
+                userItem.contact + ',' +
+                userItem.email;
+
+            listItem.appendChild(userElement);
+            userList.appendChild(listItem);
+
+            deleteButton(listItem, userItem);
+            editButton(listItem, userItem);
+        });
+    }
 }
 
 
 //Deleting user from user list.
-function deleteButtton(user, userItem) {
-
+function deleteButton(user, userItem) {
     const deleteBtn = document.createElement('input');
     deleteBtn.type = 'button';
     deleteBtn.value = 'Delete';
@@ -93,11 +100,17 @@ function deleteButtton(user, userItem) {
     deleteBtn.onclick = function () {
         user.remove();
 
-        const apiUrl = `https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData/${userItem._id}`;
-        axios.delete(apiUrl);
-
+        const apiUrl = `http://localhost:3000/user/delete-user/${userItem.id}`;
+        axios.delete(apiUrl)
+            .then((response) => {
+                console.log('User deleted:', response.data);
+            })
+            .catch((err) => {
+                console.error('Error deleting user:', err);
+            });
     };
-    //styling Delete Button
+
+    // Styling Delete Button
     deleteBtn.style.backgroundColor = 'light-grey';
     deleteBtn.style.borderColor = 'grey';
     deleteBtn.style.borderRadius = '3px';
@@ -107,9 +120,9 @@ function deleteButtton(user, userItem) {
     deleteBtn.style.padding = '5px';
 
     user.appendChild(deleteBtn);
-};
+}
 
-//Edit Button 
+// Edit Button 
 function editButton(user, userItem) {
     const editBtn = document.createElement('input');
     editBtn.type = 'button';
@@ -117,24 +130,26 @@ function editButton(user, userItem) {
 
     editBtn.onclick = function () {
 
-        const apiUrl = `https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData/${userItem._id}`;
+        const apiUrl = `http://localhost:3000/user/get-user/${userItem._id}`;
         axios.get(apiUrl)
             .then((response) => {
                 const userItem = response.data;
 
-                firstName.value = userItem.firstName;
-                lastName.value = userItem.lastName;
-                dateInput.value = userItem.date;
+                userName.value = userItem.username;
                 contactInput.value = userItem.contact;
+                emailId.value = userItem.email;
 
                 myForm.removeEventListener('submit', onSubmit);
                 myForm.addEventListener('submit', onUpdate);
 
                 user.remove();
             })
-            
+            .catch((err) => {
+                console.error('Error getting user for edit:', err);
+            });
     };
 
+    // Styling Edit Button
     editBtn.style.backgroundColor = 'light-grey';
     editBtn.style.borderColor = 'grey';
     editBtn.style.borderRadius = '3px';
@@ -150,20 +165,19 @@ function onUpdate(e) {
     e.preventDefault();
 
     const updatedDetails = {
-        firstName: firstName.value,
-        lastName: lastName.value,
-        date: dateInput.value,
+        userName: userName.value,
         contact: contactInput.value,
+        emailId: emailId.value,
     };
 
-    const apiUrl = `https://crudcrud.com/api/1e5195dd03804c66b5d7cc3d5340b52f/appointmentData/${userItem._id}`;
+    const apiUrl = `http://localhost:3000/user/add-user/${userItem._id}`;
     axios.put(apiUrl, updatedDetails)
         .then((response) => {
-  
-            console.log('Appointment updated:', response.data);
+
+            console.log('User updated:', response.data);
         })
         .catch((err) => {
-            console.error('Error updating appointment:', err);
+            console.error('Error updating user:', err);
         });
 
     myForm.removeEventListener('submit', onUpdate);
@@ -177,8 +191,7 @@ function onUpdate(e) {
 //clearing inputs
 function clearInputs() {
 
-    firstName.value = '';
-    lastName.value = '';
-    dateInput.value = '';
+    userName.value = '';
     contactInput.value = '';
+    emailId.value = '';
 }
